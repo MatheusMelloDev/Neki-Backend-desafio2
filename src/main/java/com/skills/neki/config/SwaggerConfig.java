@@ -1,38 +1,32 @@
 package com.skills.neki.config;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.servers.Server;
+import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.security.SecurityScheme.In;
+import io.swagger.v3.oas.models.security.SecurityScheme.Type;
 
 @Configuration
 public class SwaggerConfig {
 
-	@Value("${prop.swagger.dev-url}")
-	private String devUrl;
-
-	@Bean
-	OpenAPI myOpenAPI() {
-		Server server = new Server();
-		
-		server.setUrl(devUrl);
-		server.setDescription("Server URL - ambiente de desenvolvimento");
-
-		Contact contact = new Contact();
-		contact.setEmail("Skills@neki.com.br");
-		contact.setName("Matheus Mello");
-		contact.setUrl("http://www.skills.neki.com.br");
-
-		Info info = new Info().title("Documentação API - Skills Neki").version("1.0.0").contact(contact)
-				.description("API com endpoints do Skills.")
-				.termsOfService("http://www.skills.neki.com/terms");
-
-		return new OpenAPI().info(info).servers(List.of(server));
-	}
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .info(new Info().title("Documentação API - Desafio NEKI")
+                        .description("API com endpoints do Desafio Neki")
+                        .version("1.0.0")
+                        .license(new License().name("Licença do sistema").url("http://springdoc.org")))
+                .addSecurityItem(new SecurityRequirement().addList("JWT"))
+                .components(new io.swagger.v3.oas.models.Components()
+                        .addSecuritySchemes("JWT", new SecurityScheme()
+                                .type(Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT")
+                                .in(In.HEADER)
+                                .name("Authorization")));
+    }
 }

@@ -1,13 +1,20 @@
 package com.skills.neki.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.skills.neki.dto.SkillsDTO;
+import com.skills.neki.exceptions.ResourceNotFoundException;
 import com.skills.neki.model.Skills;
 import com.skills.neki.services.SkillsService;
 
@@ -18,7 +25,7 @@ public class SkillsController {
     @Autowired
     private SkillsService skillsService;
 
-    @PostMapping("/cadastrar_skills")
+    @PostMapping("/register_skills")
     public ResponseEntity<Skills> createSkills(@RequestBody SkillsDTO skillsDTO) {
         Skills savedSkills = skillsService.saveSkills(skillsDTO);
         return ResponseEntity.ok(savedSkills);
@@ -32,13 +39,17 @@ public class SkillsController {
 
     @PatchMapping("/alterar_skills/{id}")
     public ResponseEntity<Skills> updateSkills(@PathVariable Long id, @RequestBody SkillsDTO skillsDTO) {
-        Optional<Skills> updatedSkills = skillsService.updateSkills(id, skillsDTO);
-        return updatedSkills.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        Skills updatedSkills = skillsService.updateSkills(id, skillsDTO)
+                .orElseThrow(() -> new ResourceNotFoundException("Skill não encontrada com id: " + id));
+        return ResponseEntity.ok(updatedSkills);
     }
 
     @DeleteMapping("/deletar_skills/{id}")
-    public ResponseEntity<Void> deleteSkills(@PathVariable Long id) {
+    public ResponseEntity<String> deleteSkills(@PathVariable Long id) {
+        if (!skillsService.existsById(id)) {
+            throw new ResourceNotFoundException("Skill não encontrada com id: " + id);
+        }
         skillsService.deleteSkills(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Skill deletada com sucesso");
     }
 }
