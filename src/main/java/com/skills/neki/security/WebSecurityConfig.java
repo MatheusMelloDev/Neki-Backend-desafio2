@@ -1,6 +1,5 @@
 package com.skills.neki.security;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +22,7 @@ public class WebSecurityConfig {
     private CustomUserDetailsService userDetailsService;
 
     @Autowired
-    JwtFilter  jwtFilter;
+    JwtFilter jwtFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -33,16 +32,12 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/swagger-ui/**").permitAll()
-                        .requestMatchers(HttpMethod.PATCH, "/swagger-ui/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/swagger-ui/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll() // Swagger UI
+                        .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll() // OpenAPI documentation
                         .requestMatchers(HttpMethod.POST, "/skills/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/skills/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/skills/**").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/skills/**").authenticated()
-                        .requestMatchers("/skills/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
@@ -59,11 +54,11 @@ public class WebSecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-	public CustomUserDetailsService getUserDetailsService() {
-		return userDetailsService;
-	}
+    public CustomUserDetailsService getUserDetailsService() {
+        return userDetailsService;
+    }
 
-	public void setUserDetailsService(CustomUserDetailsService userDetailsService) {
-		this.userDetailsService = userDetailsService;
-	}
+    public void setUserDetailsService(CustomUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 }

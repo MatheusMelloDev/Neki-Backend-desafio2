@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -33,11 +34,11 @@ public class Skills {
     @Column(name = "tecnologia")
     private String tecnologia;
     
-
-    @ManyToOne
-    @JoinColumn(name = "id_user")
-    private User user;
+    @Lob
+    private byte[] photo;
     
+    
+
 /*estou comentando pq acho que não vou precisar dessa associação
     @ManyToMany(mappedBy = "skills")
     List<User> users;
@@ -46,15 +47,16 @@ public class Skills {
     public Skills() {
     }
 
-public Skills(Long id, String nome, String descricao,  String tecnologia, User user) {
+
+public Skills(Long id, String nome, String descricao, String tecnologia, byte[] photo) {
 	super();
 	this.id = id;
 	this.nome = nome;
 	this.descricao = descricao;
-	
 	this.tecnologia = tecnologia;
-	this.user = user;
+	this.photo = photo;
 }
+
 
 public Long getId() {
 	return id;
@@ -91,18 +93,19 @@ public void setTecnologia(String tecnologia) {
 	this.tecnologia = tecnologia;
 }
 
-public User getUser() {
-	return user;
+public byte[] getPhoto() {
+	return photo;
 }
 
-public void setUser(User user) {
-	this.user = user;
+public void setPhoto(byte[] photo) {
+	this.photo = photo;
 }
 
-public void setImagemUrl(Object imagemUrl) {
-	// TODO Auto-generated method stub
-	
-}
+
+
+
+
+
 
 
 

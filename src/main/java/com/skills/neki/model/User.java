@@ -24,22 +24,20 @@ public class User  {
     @Column(name = "cargo")
     private String cargo;
 
-    @OneToMany(mappedBy = "user")
-    private List<Skills> skillsList;
-
+  
     // Construtor padrão
     public User() {
     }
 
     
-	public User(Long id, String nome, String email, String senha, String cargo, List<Skills> skillsList) {
+	public User(Long id, String nome, String email, String senha, String cargo) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.email = email;
 		this.senha = senha;
 		this.cargo = cargo;
-		this.skillsList = skillsList;
+	
 	}
 
 
@@ -93,14 +91,6 @@ public class User  {
 	}
 
 
-	public List<Skills> getSkillsList() {
-		return skillsList;
-	}
-
-
-	public void setSkillsList(List<Skills> skillsList) {
-		this.skillsList = skillsList;
-	}
 
 
 

@@ -30,3 +30,7 @@ public class SwaggerConfig {
                                 .name("Authorization")));
     }
 }
+
+
+
+ /*  Link para o swagger : http://localhost:8080/project_skills/swagger-ui/index.html  */
