@@ -4,7 +4,7 @@ import com.skills.neki.model.Skills;
 
 public class SkillsDTO {
 
-    private Long id;  // Adiciona o ID aqui
+    private Long id;  
     private byte[] photo;
     private String nome;
     private String descricao;

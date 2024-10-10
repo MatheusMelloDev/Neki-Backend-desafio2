@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -79,30 +78,30 @@ public class SkillsController {
         return ResponseEntity.ok(skills);
     }
 
-    @PatchMapping(path = "/alterar_skills/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Skills> updateSkills(
+    @PatchMapping("/alterar_infos/{id}")
+    public ResponseEntity<Skills> updateSkillInfo(
         @PathVariable Long id,
-        @RequestPart("skillData") SkillsDTO skillsDTO, 
-        @RequestParam(value = "photo", required = false) MultipartFile photo) {
-        
-        // Busca a skill pelo id
-        Skills updatedSkills = skillsService.updateSkills(id, skillsDTO)
-                .orElseThrow(() -> new ResourceNotFoundException("Skill não encontrada com id: " + id));
-        
-        // Verifica se a imagem foi enviada
-        if (photo != null && !photo.isEmpty()) {
-            try {
-                updatedSkills.setPhoto(photo.getBytes());
-            } catch (IOException e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            }
-        }
-        
+        @RequestParam String nome,
+        @RequestParam String descricao,
+        @RequestParam String tecnologia,
+        @RequestParam String nivel) {
+
+        // Busca a skill pelo ID
+        Skills skills = skillsRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Skill não encontrada com id: " + id));
+
+        // Atualiza os campos
+        skills.setNome(nome);
+        skills.setDescricao(descricao);
+        skills.setTecnologia(tecnologia);
+        skills.setNivel(nivel);
+
         // Salva as alterações no banco de dados
-        skillsService.save(updatedSkills);
-        
-        return ResponseEntity.ok(updatedSkills);
+        skillsRepository.save(skills);
+
+        return ResponseEntity.ok(skills);
     }
+    
     @DeleteMapping("/deletar_skills/{id}")
     public ResponseEntity<String> deleteSkills(@PathVariable Long id) {
         if (!skillsService.existsById(id)) {
