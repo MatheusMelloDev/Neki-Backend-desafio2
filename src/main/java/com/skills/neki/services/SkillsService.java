@@ -13,35 +13,34 @@ import com.skills.neki.repositores.SkillsRepository;
 @Service
 public class SkillsService {
 
-
-
     @Autowired
     private SkillsRepository skillsRepository;
 
+    // Método para criar uma nova skill a partir de um DTO
     public Skills saveSkills(SkillsDTO skillsDTO) {
-      
-        Skills skills = new Skills();
-        skills.setNome(skillsDTO.getNome());
-        skills.setDescricao(skillsDTO.getDescricao());
-        skills.setPhoto(skillsDTO.getPhoto());
-        skills.setTecnologia(skillsDTO.getTecnologia());
-        return skillsRepository.save(skills);
+        Skills skill = new Skills();
+        skill.setNome(skillsDTO.getNome());
+        skill.setDescricao(skillsDTO.getDescricao());
+        skill.setTecnologia(skillsDTO.getTecnologia());
+        skill.setNivel(skillsDTO.getNivel()); 
+        skill.setPhoto(skillsDTO.getPhoto());
+
+        return skillsRepository.save(skill);
     }
 
-    public List<SkillsDTO> getAllSkills() {
-        List<Skills> skills = skillsRepository.findAll();
-        // Converte Skills para SkillsDTO
-        return skills.stream().map(SkillsDTO::new).toList();  // Usa o construtor correto que recebe a entidade Skills
+    // Método genérico para salvar/atualizar uma skill
+    public Skills save(Skills skill) {
+        return skillsRepository.save(skill);
     }
 
+    // Método para atualizar uma skill
     public Optional<Skills> updateSkills(Long id, SkillsDTO skillsDTO) {
-        
-        return skillsRepository.findById(id).map(skills -> {
-            skills.setNome(skillsDTO.getNome());
-            skills.setDescricao(skillsDTO.getDescricao());
-           /* skills.setImagemUrl(skillsDTO.getImagemUrl());*/
-            skills.setTecnologia(skillsDTO.getTecnologia());
-            return skillsRepository.save(skills);
+        return skillsRepository.findById(id).map(skill -> {
+            skill.setNome(skillsDTO.getNome());
+            skill.setDescricao(skillsDTO.getDescricao());
+            skill.setTecnologia(skillsDTO.getTecnologia());
+            skill.setNivel(skillsDTO.getNivel()); // Atualiza o nível da skill
+            return skillsRepository.save(skill);
         });
     }
 
@@ -53,10 +52,9 @@ public class SkillsService {
         return skillsRepository.existsById(id);
     }
 
- /*  private void validateSkillsDTO(SkillsDTO skillsDTO) {
-        if (skillsDTO.getImagemUrl() != null && ((String) skillsDTO.getImagemUrl()).length() > MAX_URL_LENGTH) {
-            throw new IllegalArgumentException("URL da imagem é muito longa");
-        }
-        // Adicione outras validações conforme necessário
-    }*/
+    public List<SkillsDTO> getAllSkills() {
+        List<Skills> skillsList = skillsRepository.findAll();
+        return skillsList.stream().map(SkillsDTO::new).toList();
+    }
+
 }

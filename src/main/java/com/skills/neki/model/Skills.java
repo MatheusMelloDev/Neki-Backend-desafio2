@@ -1,18 +1,11 @@
 package com.skills.neki.model;
 
-
-
-
-
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -30,84 +23,73 @@ public class Skills {
     @Column(name = "descricao")
     private String descricao;
 
-    
     @Column(name = "tecnologia")
     private String tecnologia;
-    
+
     @Lob
     private byte[] photo;
-    
-    
 
-/*estou comentando pq acho que não vou precisar dessa associação
-    @ManyToMany(mappedBy = "skills")
-    List<User> users;
-    */
-    
+    @Column(name = "nivel")
+    private String nivel; 
+
     public Skills() {
     }
 
+    public Skills(Long id, String nome, String descricao, String tecnologia, byte[] photo, String nivel) {
+        super();
+        this.id = id;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.tecnologia = tecnologia;
+        this.photo = photo;
+        this.nivel = nivel; 
+    }
 
-public Skills(Long id, String nome, String descricao, String tecnologia, byte[] photo) {
-	super();
-	this.id = id;
-	this.nome = nome;
-	this.descricao = descricao;
-	this.tecnologia = tecnologia;
-	this.photo = photo;
-}
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-public Long getId() {
-	return id;
-}
+    public String getNome() {
+        return nome;
+    }
 
-public void setId(Long id) {
-	this.id = id;
-}
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-public String getNome() {
-	return nome;
-}
+    public String getDescricao() {
+        return descricao;
+    }
 
-public void setNome(String nome) {
-	this.nome = nome;
-}
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
 
-public String getDescricao() {
-	return descricao;
-}
+    public String getTecnologia() {
+        return tecnologia;
+    }
 
-public void setDescricao(String descricao) {
-	this.descricao = descricao;
-}
+    public void setTecnologia(String tecnologia) {
+        this.tecnologia = tecnologia;
+    }
 
+    public byte[] getPhoto() {
+        return photo;
+    }
 
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
+    }
 
+    public String getNivel() {
+        return nivel;
+    }
 
-public String getTecnologia() {
-	return tecnologia;
-}
-
-public void setTecnologia(String tecnologia) {
-	this.tecnologia = tecnologia;
-}
-
-public byte[] getPhoto() {
-	return photo;
-}
-
-public void setPhoto(byte[] photo) {
-	this.photo = photo;
-}
-
-
-
-
-
-
-
-
-
- 
+    public void setNivel(String nivel) {
+        this.nivel = nivel;
+    }
 }
