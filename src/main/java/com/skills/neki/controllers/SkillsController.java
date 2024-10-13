@@ -20,14 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.skills.neki.dto.SkillsDTO;
-import com.skills.neki.exceptions.ResourceNotFoundException;
 import com.skills.neki.model.Skills;
 import com.skills.neki.repositores.SkillsRepository;
 import com.skills.neki.services.SkillsService;
 
 import io.swagger.v3.oas.annotations.Operation;
-
-
 
 @RestController
 @RequestMapping("/skills")
@@ -35,22 +32,21 @@ public class SkillsController {
 
     @Autowired
     private SkillsService skillsService;
-    
-    @Autowired 
+
+    @Autowired
     private SkillsRepository skillsRepository;
 
     @Operation(summary = "Upload de foto para a skill", description = "Este endpoint permite fazer upload de uma foto para a skill.")
     @PostMapping(path = "/{id}/photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Skills> uploadPhoto(@PathVariable Long id, @RequestParam("photo") MultipartFile photo) {
         Skills skills = skillsRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Skill not found with id " + id));
+                .orElseThrow(() -> new RuntimeException("Skill não encontrada com id: " + id));
         try {
-           
             skills.setPhoto(photo.getBytes());
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-  
+
         skillsRepository.save(skills);
         return ResponseEntity.ok(skills);
     }
@@ -58,11 +54,9 @@ public class SkillsController {
     @GetMapping("/{id}/photo")
     public ResponseEntity<String> getPhoto(@PathVariable Long id) {
         Skills skills = skillsRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Skill not found with id " + id));
-        
-      
+                .orElseThrow(() -> new RuntimeException("Skill não encontrada com id: " + id));
+
         String base64Photo = Base64.getEncoder().encodeToString(skills.getPhoto());
-        
         return ResponseEntity.ok(base64Photo);
     }
 
@@ -80,29 +74,28 @@ public class SkillsController {
 
     @PutMapping("/alterar_infos/{id}")
     public ResponseEntity<Skills> updateSkillInfo(
-        @PathVariable Long id,
-        @RequestBody Skills updatedSkill) {
+            @PathVariable Long id,
+            @RequestBody Skills updatedSkill) {
 
-        // Busca a skill pelo ID
+     
         Skills existingSkill = skillsRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Skill não encontrada com id: " + id));
+                .orElseThrow(() -> new RuntimeException("Skill não encontrada com id: " + id));
 
-        // Atualiza os campos
+
         existingSkill.setNome(updatedSkill.getNome());
         existingSkill.setDescricao(updatedSkill.getDescricao());
         existingSkill.setTecnologia(updatedSkill.getTecnologia());
         existingSkill.setNivel(updatedSkill.getNivel());
 
-        // Salva as alterações no banco de dados
         skillsRepository.save(existingSkill);
 
         return ResponseEntity.ok(existingSkill);
     }
-    
+
     @DeleteMapping("/deletar_skills/{id}")
     public ResponseEntity<String> deleteSkills(@PathVariable Long id) {
         if (!skillsService.existsById(id)) {
-            throw new ResourceNotFoundException("Skill não encontrada com id: " + id);
+            throw new RuntimeException("Skill não encontrada com id: " + id);
         }
         skillsService.deleteSkills(id);
         return ResponseEntity.ok("Skill deletada com sucesso");
