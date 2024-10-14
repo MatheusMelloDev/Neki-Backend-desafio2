@@ -16,7 +16,7 @@ public class SkillsService {
     @Autowired
     private SkillsRepository skillsRepository;
 
-    // Método para criar uma nova skill a partir de um DTO
+  
     public Skills saveSkills(SkillsDTO skillsDTO) {
         Skills skill = new Skills();
         skill.setNome(skillsDTO.getNome());
@@ -28,18 +28,17 @@ public class SkillsService {
         return skillsRepository.save(skill);
     }
 
-    // Método genérico para salvar/atualizar uma skill
+   
     public Skills save(Skills skill) {
         return skillsRepository.save(skill);
     }
 
-    // Método para atualizar uma skill
     public Optional<Skills> updateSkills(Long id, SkillsDTO skillsDTO) {
         return skillsRepository.findById(id).map(skill -> {
             skill.setNome(skillsDTO.getNome());
             skill.setDescricao(skillsDTO.getDescricao());
             skill.setTecnologia(skillsDTO.getTecnologia());
-            skill.setNivel(skillsDTO.getNivel()); // Atualiza o nível da skill
+            skill.setNivel(skillsDTO.getNivel()); 
             return skillsRepository.save(skill);
         });
     }
